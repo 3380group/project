@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.feliperonderos.meetingapp">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/icon"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:label="LampLight">
+        <activity android:name=".MainActivity" android:label="LampLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="felipemeeting"/>
+                <data android:host="felipemeetinghost"/>
+
+                <data android:pathPattern=".*"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".AddName"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:label="Enter Your Display Name"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAfnYYArNDU75Mrirmixth-DgRAOohn0y4" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <activity
+            android:name=".DialogActivity"
+            android:label="Set Your Status"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
+        <activity android:name=".ViewMeeting" >
+        </activity>
+        <service
+            android:name=".NotificationIntentService"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver android:name=".NotificationReceiver" />
+        <receiver android:name=".ServiceStarter">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

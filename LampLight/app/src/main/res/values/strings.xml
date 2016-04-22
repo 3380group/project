@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HTTPost</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main22">Main22Activity</string>
+    <string name="name_button">Name</string>
+    <string name="status1">Unavailable</string>
+    <string name="status2">Available</string>
+    <string name="status3">Come Over</string>
+    <string name="currentTextStatus">Set New Status</string>
+    <string name="api_url">https://lamplight-1248.appspot.com</string>
+    <string name="finish_button">Confirm and finish</string>
+</resources>

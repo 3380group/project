@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{%extends "base.html"%}
+{%block title%}
+   signup
+{%endblock%}
+{% block contentnotable%}
+<style type="text/css">
+h3 {
+      text-align: center;
+}
+.error {color: green}
+</style>
+<h3>Make an account</h3>
+<form method="post">
+    <div class='container'>
+        <div class="row">
+            <div class='col-md-10 col-md-offset-1'>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Username</div>
+                    <div class="col-md-10">
+                        <input class ='form-control' type="text" name='username' value="{{username}}" autocomplete='off'>
+                        <span class='error'>{{username_error}}</span>
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Email</div>
+                    <div class="col-md-10">
+                            <input class ='form-control' type="text" name='email' value="{{email}}" autocomplete='off'>
+                            <span class='error'>{{email_error}}</span>
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Password</div>
+                    <div class="col-md-10">
+                            <input class ='form-control' type="password"name='password'>
+                            <span class='error'>{{password_error}}</span>
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Confirm Password</div>
+                    <div class="col-md-10">
+                            <input class ='form-control' type="password"name='confirm_password'>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary top-buffer col-xs-offset-11">
+            </div>
+      </div>
+    </div> 
+</form>
+{%endblock contentnotable%}

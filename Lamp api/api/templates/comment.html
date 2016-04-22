@@ -1,0 +1,101 @@
+{%extends "base.html"%}
+{% block content %}
+  {%if post %}
+  <tr>
+    <td>
+      {%if post.link%}
+        Yell:<a href= {{post.link}}>{{post.yell}}</a>
+      {%else%}
+        Yell:{{post.yell}}
+      {%endif%}
+    </td>
+    <td>
+      likes: {{post.likes}}
+    </td>
+    <td>
+      dislikes: {{post.dislikes}}
+    </td>
+    <td>
+      Score: {{post.score}}
+    </td>
+    <td>
+      HotScore: {{post.hotscore}}
+    </td>
+    <td>
+      <form method = 'post'>
+      <input type='hidden' name='like'value = {{post.IdOf}}>
+      <input type='submit' name='likeButton'+ value = 'like'>
+      </form>
+    </td>
+    <td>
+      <form method = 'post'>
+      <input type='hidden' name='dislike'value = {{post.IdOf}}>
+      <input type='submit' name='dislikeButton'+ value = 'dislike'>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    Posted by: <a href= /user/{{post.poster_id}}>{{post.poster_name}}</a>
+    </td>
+    <td>
+    Community: <a href= /community/{{post.group.name}}>{{post.group.name}}</a>
+    </td>
+  </tr>
+  {%endif%}
+  <tr>
+    <td>
+    <form method = 'post'>
+        <input type='text' name='comment_form' placeholder ='comment here'>
+        <input type='submit' name='submit'>
+    </form>
+    <td/>
+  <tr/>
+  {% if not comments %}
+      <style>
+        .message {
+          text-align: center;}
+      </style>
+        <h3 class='message'>There appear to be no comments yet, you can be the first to give a shout!<h3/>
+  {% endif %}
+  {% for comment in comments %}
+  <tr>
+    <td>
+      {%if comment.link%}
+        Yell:<a href= {{comment.link}}>{{comment.yell}}</a>
+      {%else%}
+        Yell:{{comment.yell}}
+      {%endif%}
+    </td>
+    <td>
+      likes: {{comment.likes}}
+    </td>
+    <td>
+      dislikes: {{comment.dislikes}}
+    </td>
+    <td>
+      Score: {{comment.score}}
+    </td>
+    <td>
+      HotScore: {{comment.hotscore}}
+    </td>
+    <td>
+      <form method = 'post'>
+      <input type='hidden' name='comment_like'value = {{comment.IdOf}}>
+      <input type='submit' name='likeButton'+ value = 'like'>
+      </form>
+    </td>
+    <td>
+      <form method ='post'>
+      <input type='hidden' name='comment_dislike'value = {{comment.IdOf}}>
+      <input type='submit' name='dislikeButton'+ value = 'dislike'>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    Posted by: <a href= /user/{{comment.poster_id}}>{{comment.poster_name}}</a>
+    </td>
+  </tr>
+  {% endfor %}
+{% endblock %}

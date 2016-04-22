@@ -1,0 +1,34 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+<style type="text/css">
+body{
+  color: black;
+  background: url(/static/images/crossword.png) repeat 0 0;
+}
+h1,h3,h4{
+    font-family: 'Arvo', Georgia, Times, serif;
+    font-weight: bold;
+}
+ 
+p {
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+}
+.img-thumbnail{width: 100%}
+</style>
+<div class='container'>
+<h3>Hey Lily, I thought you might want to take a look at these again since you probably lost them with your phone. You can download zipped folders with all of them by clicking on<a href="static/images/lily_1.zip"> part one</a>,<a href="static/images/lily_2.zip"> part two</a>,<a href="static/images/lily_3.zip"> part three</a>, and <a href="static/images/lily_4.zip">part four</a>. Keep in mind I saved the best for last ;). I hope you enjoy them as much as I did</h3>
+  {% for number in numbers1 %}
+        <img class ="img-thumbnail" src="/static/images/lily/0{{number}}.JPG">
+  {% endfor %}
+        <img class ="img-thumbnail" src="/static/images/lily/11.JPG">
+  {% for number in numbers %}
+        <img class ="img-thumbnail" src="/static/images/lily/{{number}}.jpg">
+  {% endfor %}
+  {% for number in numbers2 %}
+        <img class ="img-thumbnail" src="/static/images/lily/{{number}}.JPG">
+  {% endfor %}
+  <img class ="img-thumbnail" src ="/static/images/lily/43.jpeg">
+</div>
+{%endblock%}

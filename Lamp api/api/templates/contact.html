@@ -1,0 +1,79 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+<style type="text/css">
+body{
+  color: black;
+  background: url(/static/images/crossword.png) repeat 0 0;
+}
+h1,h3,h4{
+    font-family: 'Arvo', Georgia, Times, serif;
+    font-weight: bold;
+}
+ 
+p,label,div {
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+}
+.slim {
+    max-width: 730px;
+    background-color: white;
+    padding-bottom: 30px;
+  }
+.navbar-default {margin-bottom: 0px;}
+textarea {
+  resize: vertical; /* user can resize vertically, but width is fixed */
+}
+.bold{font-size: 120%;
+  margin-right: auto;
+  margin-left: auto;
+  width:85%;}
+</style>
+<div class= "bold container slim">
+    <h3>I can be contacted using the form below</h3>
+    <form method = 'post'>
+        <div class="form-group">
+        	<label for="sender">From:</label>
+        	<input id="name"type='text' class ='form-control'name='sender'placeholder ='Your name' required>
+            <label for="sender">Email:</label>
+            <input type='text' class ='form-control'name='email'placeholder ='Your email (will never be shown)' required>
+    	  	<label for="comment">Message:</label>
+    	  	<textarea class="form-control" rows="5" name="message" required></textarea>
+    	</div>
+        <input type='submit' value='Submit'class = 'btn btn-submit'name='submit'>
+        {%if not_filled%}
+        Please fill in all forms
+        {%endif%}
+    </form>
+    <h4>
+        Contact information
+    </h4>
+    <p>
+            Email: feliperonderos@gmail.com<br>
+            Phone: 1 (225) 424-9101<br>
+            Mail: 101 LSU Student Union #17830<br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspBaton Rouge, LA 70803
+
+    </p>
+    <h4>
+        Résumé
+    </h4>
+    <a href="/static/felipe_ronderos_resume.pdf">PDF</a>,<a href="/static/felipe_ronderos_resume.doc">.DOC(Word)</a>,
+    <a href="/static/felipe_ronderos_resume.txt"> .TXT</a>
+</div>
+<script type="text/javascript">
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+if(""!=getCookie("sender")){
+    document.getElementById("name").value = getCookie("sender");
+}
+</script>
+{% endblock %}

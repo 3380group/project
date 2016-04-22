@@ -1,0 +1,182 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<script src="/static/js/bootstrap-slider.js"></script>
+<script>
+    function VoteUp(storyKey){
+        var send = JSON.stringify({ like: storyKey});
+        console.log(send);
+        $.ajax({
+          type: "POST",
+          url: "/vote/",
+          data: send,
+          contentType: "application/json",
+        })
+        .done(function( data ) { // check why I use done
+            if(data){
+            console.log(data);
+            var data = JSON.parse(data)
+            var data = JSON.parse(data)
+            console.log(data);
+            post = data['post'];
+            var fetch = '#'+String(storyKey);
+            $(fetch+'_score').html('Score: ' + post['score']);
+            $(fetch+'_hotscore').html('HotScore: '+ post['hotscore']);
+            $(fetch+'_likes').html('likes: '+ post['likes']); 
+            $(fetch+'_dislikes').html('dislikes: '+post['dislikes']);}
+        });
+    };
+    function VoteDown(storyKey){
+        var send = JSON.stringify({ dislike: storyKey});
+        console.log(send);
+        $.ajax({
+          type: "POST",
+          url: "/vote/",
+          data: send,
+          contentType: "application/json",
+        })
+        .done(function( data ) { // check why I use done
+            if(data){
+            var data = JSON.parse(data)
+            var data = JSON.parse(data)//leave both
+            post = data['post'];
+            var fetch = '#'+String(storyKey);
+            $(fetch+'_score').html('Score: ' + post['score']);
+            $(fetch+'_hotscore').html('HotScore: '+ post['hotscore']);
+            $(fetch+'_likes').html('likes: '+ post['likes']); 
+            $(fetch+'_dislikes').html('dislikes: '+post['dislikes']);}
+        });
+    };
+    function addSlider(){
+      var group = $('#searchbox').val();  
+      if (group){
+        $('#searchbox').val('Add another');
+        group = String(group);
+      var x = '<div>'+group+'</div><input id="'+group+'slider" name ="'+group+'"data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="6" data-slider-step="1" data-slider-value= "3"/><input id="'+ group+'"name="slider" type= "hidden">';
+        $('#prefetch').html(x);
+        $('#' + group + 'slider').slider({
+          formater: function(value) {
+            value = value - 3;
+            $('#' + group).val(group+ ','+value);
+            return 'Current value: ' + value;
+          }
+        });
+        var n = $('#prefetch').html().indexOf("slider-handle min-slider-handle round")
+        if (n==-1){
+          $('#prefetch').html('<input class="typeahead form-control top-buffer" data-provide="typeahead" type="text" placeholder="Groups" name="searchbox" id = "searchbox" autocomplete="off"><input class ="btn btn-primary top-buffer"type="submit" onclick="addSlider()"id ="addslider" value="Add Slider">');
+          $('#prefetch .typeahead').typeahead(null, {
+            name: 'countries',
+            displayKey: 'name',
+            source: countries.ttAdapter()
+});
+        }
+      }
+    }
+</script>
+<link href="/static/css/slider.css" rel="stylesheet">
+<div class='container'>
+  <div class='col-xs-3 hidden-md hidden-lg col-xs-offset-9'>
+    <button class="btn btn-primary top-buffer" onclick="location.href='/post?group={{group.name}}'">Post to this group!</button>
+  </div>
+  <div class="row">
+    <div class='col-md-9'>
+      {% for post in posts %}
+      <div class = 'row tentop-buffer'>
+        <div class = 'col-md-2'>
+          {%if post.link%}
+            Yell:<a href= {{post.link}}>{{post.yell}}</a>
+          {%else%}
+  				  Yell:{{post.yell}}
+          {%endif%}
+        </div>
+        <div class = 'col-md-2' id ='{{post.key().id()}}_score'>
+          Score: {{post.score}}
+        </div>
+        <div class = 'col-md-4' id ='{{post.key().id()}}_hotscore'>
+          HotScore: {{post.hotscore}}
+        </div>
+        <div class = 'col-md-1'>
+          <input type='button' onclick='VoteUp({{post.key().id()}})' class="btn btn-default"id='likeButton'+ value = 'like'>
+        </div>
+        <div class = 'col-md-1'>
+          <input type='button' onclick='VoteDown({{post.key().id()}})' class="btn btn-default" id='dislikeButton'value = 'dislike'>
+        </div>
+      </div>
+      <div class = 'row'>
+        <div class = 'col-md-3'>
+        Posted by: <a href= /user/{{post.poster_id}}>{{post.poster_name}}</a>
+        </div>
+        <div class = 'col-md-2'>
+        <a href= /comments/{{post.IdOf}}>Comment</a>
+        </div>
+        <div class = 'col-md-3'>
+        Community: <a href= /community/{{post.group.name}}>{{post.group.name}}</a>
+        </div>
+        <div class = 'col-md-2' id ='{{post.key().id()}}_likes'>
+          likes: {{post.likes}}
+        </div>
+        <div class = 'col-md-2' id ='{{post.key().id()}}_dislikes'>
+          dislikes: {{post.dislikes}}
+        </div>
+      </div>
+  		{%endfor%}
+    </div>
+    <div class='col-md-3'>
+        <button class="btn btn-primary top-buffer" onclick="location.href='/post?group={{group.name}}'">Post to this group</button>
+        <form method="POST">
+        <div id ='Sliders'>
+        {% for groupname, key in data%}
+             <div>{{groupname}}</div>
+             <input id={{groupname + 'slider'}} name = {{groupname + 'slider'}} data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="6" data-slider-step="1" data-slider-value= '{{key + 3}}'/>
+             <input id={{groupname}} name='slider' type= 'hidden'>
+        <script language="Javascript" type="text/javascript">
+        $('{{'#' + groupname + 'slider'}}').slider({
+          formater: function(value) {
+            value = value - 3
+            $('{{'#' + groupname}}').val('{{groupname}}'+ ','+value);
+            return 'Current value: ' + value;
+          }
+        });
+        </script>
+        {%endfor%}
+        </div>
+        <div id="prefetch">
+          <input class="typeahead form-control top-buffer" data-provide="typeahead" type="text" placeholder="Groups" name='searchbox' id = 'searchbox' autocomplete='off'>
+          <input class ='btn btn-primary top-buffer'type="submit" onclick='addSlider()'id ='addslider' value='Add Slider'>
+        </div>
+        <input type="submit" value='Submit Sliders'class="btn btn-primary top-buffer">
+        </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+var countries = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  limit: 10,
+  prefetch: {
+    // url points to a json file that contains an array of country names, see
+    // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
+    url: '../grouplist.json',
+    //time to delete local data in miliseconds
+    ttl: 60000,
+    // the json file contains an array of strings, but the Bloodhound
+    // suggestion engine expects JavaScript objects so this converts all of
+    // those strings
+    filter: function(list) {
+      return $.map(list, function(country) { return { name: country }; });
+    }
+  }
+});
+// kicks off the loading/processing of `local` and `prefetch`
+countries.initialize();
+// passing in `null` for the `options` arguments will result in the default
+// options being used
+$('#prefetch .typeahead').typeahead(null, {
+  name: 'countries',
+  displayKey: 'name',
+  // `ttAdapter` wraps the suggestion engine in an adapter that
+  // is compatible with the typeahead jQuery plugin
+  source: countries.ttAdapter()
+});
+</script>
+{% endblock contentnotable %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{%extends "base.html"%}
+{%block title%}
+   {{theUser.name}}
+{%endblock title%}
+{% block content %}
+<style type="text/css">
+      .error {color: green}
+</style>
+<h3>{{theUser.name}}</h3>
+<table class='table'>
+    <tr>
+        <td>
+            Score:
+        </td>
+        <td>
+            {{theUser.score}}
+        </td>
+    </tr>
+</table>
+{%endblock content%}

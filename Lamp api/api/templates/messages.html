@@ -1,0 +1,92 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+<style type="text/css">
+body{
+  color: black;
+  background: url(/static/images/crossword.png) repeat 0 0;
+}
+h1,h3,h4{
+    font-family: 'Arvo', Georgia, Times, serif;
+    font-weight: bold;
+}
+ 
+p,label,div {
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+}
+.slim {
+max-width: 730px;
+background-color: white;
+padding-bottom: 30px;
+padding-top: 15px;
+}
+.navbar-default {margin-bottom: 0px;}
+textarea {
+resize: vertical; /* user can resize vertically, but width is fixed */
+}
+.remove{
+     position: relative;
+    float: right;
+
+}
+.bold{font-size: 120%;
+  margin-right: auto;
+  margin-left: auto;
+  width:85%;}
+</style>
+<div class= "bold container slim">
+    To send a new message, go to <a href="/contact">the contact page</a><br>
+    {%if messages != []%}
+    <h3>Messages From {{sender}}</h3>
+    {% for message in messages %}
+    <div>
+        <div>
+        {{message.message}}
+        </div><br>
+        <label for="date">Posted On:</label>
+        <button id='remove'type='submit'value='{{message.ID}}' class = 'remove btn'>remove</button>
+        <div id = "date" class='date' style='visibility: hidden'>
+            {{message.created_epoch}}
+        </div>
+        <br>
+    </div>
+    {%endfor%}
+    {% else %}
+    There appear to be no messages here
+    {% endif %}
+    <div class="form-group">
+        <label for="sender">Search  for messages by sender name:</label>
+        <input id='sender'type='text'class ='form-control'name='sender'placeholder ='sender name' required>
+    </div>
+    <input id ='submit'type='submit'value='Submit' class = 'btn btn-submit' align='right'name='submit'>
+<script>
+try{
+var elements = document.getElementsByClassName('remove');
+for (var i = 0, len = elements.length; i < len; i++){
+elements[i].addEventListener("click", function(){  
+$.post(window.location,this.value);
+alert("Post hidden")
+window.location = window.location;
+});}
+var dates = document.getElementsByClassName('date');
+for (var i = 0, len = dates.length; i < len; i++){
+    var d = new Date(0); 
+    d.setUTCSeconds(parseInt(dates[i].innerHTML));
+    console.log(dates[i].innerHTML);
+    if (dates[i].innerHTML == 0){
+        dates[i].innerHTML = "Just now";    
+    }
+    else{
+        dates[i].innerHTML = d;
+    }
+    dates[i].style.visibility = "visible";
+    }
+}
+catch(err){}
+document.getElementById("submit").addEventListener("click", function(){ 
+window.location = document.getElementById('sender').value;
+});
+</script>
+</div>
+{% endblock %}

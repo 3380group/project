@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{%extends "base.html"%}
+{%block title%}
+   New Group
+{%endblock title%}
+{% block contentnotable%}
+<style type="text/css">
+h3 {
+      text-align: center;
+}
+</style>
+<h3>New Group</h3>
+<form method="post">
+    <div class='container'>
+        <div class="row">
+            <div class='col-md-10 col-md-offset-1'>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Name</div>
+                    <div class="col-md-10">
+                        <input class ='form-control'type="text" name='name' value="{{name}}" autocomplete='off'>
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Linked from</div>
+                    <div class="col-md-10">
+                            <input class ='form-control'type="text"name='linkedFrom' autocomplete='off'>
+                    </div>
+                </div>
+                {%if user%}
+                <div class="row top-buffer">  
+                    <div class="col-md-4"> Make this group private <input type="checkbox" name="private">  
+                    </div>
+                </div>
+                {%else%}
+                <strong class="row top-buffer">Log in to make private groups and get credit for your work</strong>
+                {%endif%}
+                <input type="submit" class="btn btn-primary top-buffer col-xs-offset-11">
+            </div>
+      </div>
+    </div> 
+</form>
+{%endblock contentnotable%}

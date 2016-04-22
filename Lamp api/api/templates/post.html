@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{%extends "base.html"%}
+{%block title%}
+   New Post
+{%endblock title%}
+{% block contentnotable%}
+<style type="text/css">
+h3 {
+      text-align: center;
+}
+</style>
+<h3>New Post</h3>
+<form method="post" autocomplete="off">
+    <div class='container'>
+        <div class="row">
+            <div class='col-md-10 col-md-offset-1'>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Type what you want to share</div>
+                    <div class="col-md-10">
+                         <input class ='form-control'type="text" name="yell" value="{{yell}}">
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Submit a Link (optional)</div>
+                    <div class="col-md-10">
+                             <input class ='form-control' type="text"name="link">
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-2">Post to Group</div>
+                    <div class="col-md-10">
+                             <input class ='form-control'type="text"name="group"value = {{groupname}}>
+                    </div>
+                </div>
+                {%if user%}
+                <div class="row top-buffer">  
+                    <div class="col-md-4"> Submit Anonymously <input type="checkbox" name="anonymous">  
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary top-buffer col-md-offset-11">
+                {%else%}
+                <input type="submit" class="btn btn-primary top-buffer col-md-offset-11">
+                <strong class="row top-buffer">Log in to post to private groups and get credit for your work</strong>
+                {%endif%}
+            </div>
+      </div>
+    </div> 
+</form>
+{%endblock contentnotable%}

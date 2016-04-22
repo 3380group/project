@@ -1,0 +1,53 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+<style type="text/css">
+body{
+  color: black;
+  background: url(/static/images/crossword.png) repeat 0 0;
+}
+h1,h3,h4{
+    font-family: 'Arvo', Georgia, Times, serif;
+    font-weight: bold;
+}
+ 
+p,label,div {
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+}
+.slim {
+    max-width: 730px;
+    background-color: white;
+    padding-bottom: 30px;
+  }
+.navbar-default {margin-bottom: 0px;}
+textarea {
+  resize: vertical; /* user can resize vertically, but width is fixed */
+}
+.image {
+position: relative;
+float: right;
+width: 11em;
+margin-left: 0.3em;
+}
+.bold{font-size: 120%;
+  margin-right: auto;
+  margin-left: auto;
+  width:85%;}
+</style>
+<div class= "bold container slim">
+    <h1>Independent Projects</h1>
+    <h3>Felipe's Scheduler</h3>
+    <div>
+        <div id="image">
+            <img class="img-thumbnail image"src="static/images/d.png" alt="Whoops! Where could I be?">
+            <img class="img-thumbnail image"src="static/images/e.png" alt="Whoops! Where could I be?">
+        </div>
+        <a href="https://play.google.com/store/apps/details?id=calendarview.com.feliperonderos">Felipe's Scheduler</a> is a daily planner application for android which allows users to plan around repetitive tasks in their schedule. Tasks are entered by the user, then the app automatically suggests a schedule which fits tasks into specified time slots in the day. Users can then drag tasks into a better time slot until they are satisfied. This application is a powerful productivity and visualization tool. It was developed entirely using Android Studio and makes use of the Joda-Time API and a SQLite database as well as custom Android UI classes. The latest version of the app can be found on the <a href="https://play.google.com/store/apps/details?id=calendarview.com.feliperonderos">Google Play Store</a>.
+    </div>
+    <h3>feliperonderos.com (this website!)</h3>
+    <div>
+       This portfolio website is deployed on Google App Engine's Python Engine. It features a handy messaging page (check it out at <a href="/contact">the contact page</a>!). The backend uses Google's Datastore to store message data, Memcache for instant access to messages and the Mail Python API to email me when someone sends a new message (hooray!) . The front end uses the Jinja2 templating engine, JavaScript and Bootstrap version 3. Both use unhashed cookies to keep track of the user's submitted name when a message is sent.
+    </div>
+</div>
+{% endblock %}

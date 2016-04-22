@@ -1,0 +1,131 @@
+{%extends "base.html"%}
+{% block contentnotable %}
+<link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+<style type="text/css">
+body{
+  color: black;
+  background: url(/static/images/crossword.png) repeat 0 0;
+}
+h1,h3,h4{
+    font-family: 'Arvo', Georgia, Times, serif;
+    font-weight: bold;
+}
+ 
+p,label,div  {
+    font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+}
+.slim {
+    max-width: 730px;
+    background-color: white;
+  }
+.k{z-index: -1;}
+.bold{font-size: 120%;
+  margin-right: auto;
+  margin-left: auto;
+  width:85%;}
+.navbar-default {margin-bottom: 0px;}
+h2{margin: 0px;}
+@media only screen and (min-width:601px) {
+  #image {
+    position: relative;
+    float: right;
+    width: 13em;
+    margin-top:1em;
+  }
+}
+@media only screen and (max-width:600px) {
+  #image {
+    position: block;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    float: none;
+    width: 70%;
+    clear: both;
+  }
+}
+img {
+  -webkit-transition: opacity 2s ease-in-out;
+  -moz-transition: opacity 2s ease-in-out;
+  -o-transition: opacity 2s ease-in-out;
+  transition: opacity 2s ease-in-out;
+}
+#image img.transparent {
+  opacity:0;
+}
+
+</style>
+<script>
+var looper;
+var degrees = 0;
+function rotateAnimation(el,speed){
+  var elem = document.getElementById(el);
+  if(navigator.userAgent.match("Chrome")){
+    elem.style.WebkitTransform = "rotate("+degrees+"deg)";
+  } else if(navigator.userAgent.match("Firefox")){
+    elem.style.MozTransform = "rotate("+degrees+"deg)";
+  } else if(navigator.userAgent.match("MSIE")){
+    elem.style.msTransform = "rotate("+degrees+"deg)";
+  } else if(navigator.userAgent.match("Opera")){
+    elem.style.OTransform = "rotate("+degrees+"deg)";
+  } else {
+    elem.style.transform = "rotate("+degrees+"deg)";
+  }
+  degrees--;
+  if((degrees > -91)&&(degrees < 91)){
+    looper = setTimeout('rotateAnimation(\''+el+'\','+speed+')',speed);
+  }
+  else{
+    setTimeout(changeImage,3000);
+  }
+}
+function changeImage() {
+  $("#image img.image").toggleClass("transparent")
+  setTimeout(switchOut,1000)
+  setTimeout('$("#image img.image").toggleClass("transparent")',2000);
+  document.getElementById("image_01").onclick = switchOut;
+}
+function switchOut(){
+  if (!($("#image_01").attr("src")=="static/images/me_01.jpg")){
+    document.getElementById("image_01").src="static/images/me_01.jpg";
+  }
+  else{
+    document.getElementById("image_01").src="static/images/me_04.jpg";
+  }
+    var elem = document.getElementById("image");
+  if(navigator.userAgent.match("Chrome")){
+    elem.style.WebkitTransform = "rotate(0deg)";
+  } else if(navigator.userAgent.match("Firefox")){
+    elem.style.MozTransform = "rotate(0deg)";
+  } else if(navigator.userAgent.match("MSIE")){
+    elem.style.msTransform = "rotate(0deg)";
+  } else if(navigator.userAgent.match("Opera")){
+    elem.style.OTransform = "rotate(0deg)";
+  } else {
+    elem.style.transform = "rotate(0deg)";
+  }
+}
+</script>
+<div class='container slim'>
+    <div class = 'bold'>
+    <br>
+    <div id="image">
+      <img id="image_01"class="img-thumbnail image"src="static/images/me_03.jpg" alt="Whoops! Where could I be?">
+    </div>
+    <script>
+      setTimeout('rotateAnimation("image",20)',3000);
+    </script>
+    <h1>Hi, I'm Felipe Ronderos</h1>
+    <p>I'm a computer science major in my second year at Louisiana State University. I love software development and am looking to gain experience and contribute to real world projects.</p>
+    <h3>What sets you apart?</h3>
+    <p> I am practically oriented and see the value in writing code that works and is easy to work with. I realize there is always more to discover and look forward to learning and applying new skills and frameworks. Most importantly, I think that practice is the best way to pick up and master these abilities. I have done some independent work and built a <a href="https://play.google.com/store/apps/details?id=calendarview.com.feliperonderos">scheduler app</a> for android and websites like this one. Detailed descriptions for these and other projects can be found under the <a href="/projects">projects page</a>. I am comfortable programming in Java and Python and have some experience with HTML, CSS, and JavaScript. Having said this, I am always excited to learn something new. On a personal note, I am fluent in Spanish, love to experience new cultures, and am fascinated by seeing how things work.
+    </p>
+    <h3>Like to know more?</h3>
+    <p> 
+    My résumé and contact information can be found at my <a href="/contact">contact page</a>. 
+    </p>
+    <br>
+    </div>
+</div>
+{%endblock%}

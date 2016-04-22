@@ -1,0 +1,236 @@
+{%extends "base.html"%}
+{% block content %}
+<link href="/static/css/jit.css" rel="stylesheet">
+<input type="hidden" id="group" name="group" value="{{title}}">
+<form method='post' id='x'>
+<div id="prefetch">
+  <input class="typeahead" data-provide="typeahead" type="text" placeholder="Groups" name='searchbox' autocomplete='off'>
+  <input type="submit" id = 'y'>
+</div>
+</form>
+<script type="text/javascript">
+var countries = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  limit: 10,
+  prefetch: {
+    // url points to a json file that contains an array of country names, see
+    // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
+    url: '../grouplist.json',
+    //time to delete local data in miliseconds
+    ttl: 60000,
+    // the json file contains an array of strings, but the Bloodhound
+    // suggestion engine expects JavaScript objects so this converts all of
+    // those strings
+    filter: function(list) {
+      return $.map(list, function(country) { return { name: country }; });
+    }
+  }
+});
+// kicks off the loading/processing of `local` and `prefetch`
+countries.initialize();
+// passing in `null` for the `options` arguments will result in the default
+// options being used
+$('#prefetch .typeahead').typeahead(null, {
+  name: 'countries',
+  displayKey: 'name',
+  // `ttAdapter` wraps the suggestion engine in an adapter that
+  // is compatible with the typeahead jQuery plugin
+  source: countries.ttAdapter()
+});
+</script>
+<script language="javascript" type="text/javascript">
+    var labelType, useGradients, nativeTextSupport, animate;
+
+(function() {
+  var ua = navigator.userAgent,
+      iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
+      typeOfCanvas = typeof HTMLCanvasElement,
+      nativeCanvasSupport = (typeOfCanvas == 'object' || typeOfCanvas == 'function'),
+      textSupport = nativeCanvasSupport 
+        && (typeof document.createElement('canvas').getContext('2d').fillText == 'function');
+  //I'm setting this based on the fact that ExCanvas provides text support for IE
+  //and that as of today iPhone/iPad current text support is lame
+  labelType = (!nativeCanvasSupport || (textSupport && !iStuff))? 'Native' : 'HTML';
+  nativeTextSupport = labelType == 'Native';
+  useGradients = nativeCanvasSupport;
+  animate = !(iStuff || !nativeCanvasSupport);
+})();
+
+var Log = {
+  elem: false,
+  write: function(text){
+    if (!this.elem) 
+      this.elem = document.getElementById('log');
+    this.elem.innerHTML = text;
+    this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
+  }
+};
+
+function init(){
+    var group = '/' + document.getElementById("group").value;
+    $.ajax({
+        url: '/groupgraph' + group + '.json',
+        async: false,
+        dataType: 'json',
+        success: function (response) {
+                json = response;}
+    });
+    //var json = responsecontainer.innerHTML
+ 
+    //{"id": "all","name": "all","children": [{"id": "aa","name": "aa", "children": [],"data": {}}]}
+    //end
+    var infovis = document.getElementById('infovis');
+    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
+    
+    //init Hypertree
+    var ht = new $jit.Hypertree({
+      //id of the visualization container
+      injectInto: 'infovis',
+      //canvas width and height
+      width: w,
+      height: h,
+      //Change node and edge styles such as
+      //color, width and dimensions.
+      Node: {
+          dim: 9,
+          color: "#f00"
+      },
+      Edge: {
+          lineWidth: 2,
+          color: "#088"
+      },  
+      //$.ajax({
+      //  url: '/groupgraph/' + nodeId + '.json',
+      //  async: false,
+      //  dataType: 'json',
+      //  success: function (response) {
+      //          json = response;}
+      onBeforeCompute: function(node){
+          Log.write(node._depth);
+          $.ajax({
+        url:  '/groupgraph/' + node.name+ '.json',
+        async: false,
+        dataType: 'json',
+        success: function (response) {
+                json = response.concat(json);}
+    });
+      },
+      //Attach event handlers and add text to the
+      //labels. This method is only triggered on label
+      //creation
+      onCreateLabel: function(domElement, node){
+          domElement.innerHTML = node.name;
+          $jit.util.addEvent(domElement, 'click', function () {
+              ht.onClick(node.id, {
+                  onComplete: function() {
+                      ht.controller.onComplete();
+                  }
+              });
+          });
+      },
+      //Change node styles when labels are placed
+      //or moved.
+      onPlaceLabel: function(domElement, node){
+          var style = domElement.style;
+          style.display = '';
+          style.cursor = 'pointer';
+          if (node._depth <= 1) {
+              style.fontSize = "0.8em";
+              style.color = "#ddd";
+
+          } else if(node._depth == 2){
+              style.fontSize = "0.7em";
+              style.color = "#555";
+
+          } else {
+              style.display = 'none';
+          }
+
+          var left = parseInt(style.left);
+          var w = domElement.offsetWidth;
+          style.left = (left - w / 2) + 'px';
+      },
+      
+      onComplete: function(){
+          var node = ht.graph.getClosestNodeToOrigin("current");
+          //if (original._depth > 1){
+          ht.loadJSON(json);
+          ht.refresh();
+          Log.write("done");
+          
+          //Build the right column relations list.
+          //This is done by collecting the information (stored in the data property) 
+          //for all the nodes adjacent to the centered node.
+          var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
+          html += "<ul>";
+          node.eachAdjacency(function(adj){
+              var child = adj.nodeTo;
+              if (child.data) {
+                  var rel = (child.data.father == node.name) ? child.data.relation : node.data.relation;
+                  html += "<li>" + child.name + " " + "<div class=\"relation\">(relation: " + rel + ")</div></li>";
+              }
+          });
+          html += "</ul>";
+          $jit.id('inner-details').innerHTML = html;
+      }
+    });
+    //load JSON data.
+    ht.loadJSON(json);
+    //compute positions and plot.
+    ht.refresh();
+    $jit.Graph.Util.computeLevels('all'); 
+    //end
+    ht.controller.onComplete();
+}
+    </script>
+</head>
+
+<body onload="init();">
+<div id="container">
+
+<div id="left-container">
+
+
+
+<div class="text">
+<h4>
+Tree Animation    
+</h4> 
+
+            A static JSON Tree structure is used as input for this visualization.<br /><br />
+            <b>Click</b> on a node to move the tree and center that node.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.<br /><br />
+            <b>Use the mouse wheel</b> to zoom and <b>drag and drop the canvas</b> to pan.
+            
+</div>
+
+<div id="id-list"></div>
+
+
+<div style="text-align:center;"><a href="example1.js">See the Example Code</a></div>            
+</div>
+
+<div id="center-container">
+    <div id="infovis"></div>    
+</div>
+
+<div id="right-container">
+
+<div id="inner-details"></div>
+
+</div>
+
+<div id="log"></div>
+</div>
+      {% for group in groups %}
+      <tr>
+        <td>
+  			 <a href=/community/{{group.name}}>{{group.name}}</a>
+        </td>
+        <td>
+          Average Score: {{group.average_hot_5_score}}
+        </td>
+      </tr>
+  		{%endfor%}
+{% endblock %}
